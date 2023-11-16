@@ -31,7 +31,7 @@ $$
 
 # Operaciones logicas
 
-$$
+```math
 \begin{aligned}
 L &\to TX \\
 X &\to \text{OTX} \mid \varepsilon \\
@@ -43,7 +43,7 @@ O &\to || \\
 A &\to \text{\&amp;\&amp;} \\
 I &\to \text{id} \\
 \end{aligned}
-$$
+```
 
 
 
@@ -51,8 +51,8 @@ $$
 
 $$
 \begin{aligned}
-S &\to \text{if} (C) \text{\{S\}} \text{ E }  \\
-E &\to \text{else } \{ S \} \mid \varepsilon \\
+S &\to \text{if} (C) \lbrace S \rbrace \text{ E }  \\
+E &\to \text{else} \lbrace S \rbrace \mid \varepsilon \\
 C &\to B \mid C \verb|&&| C \mid C \verb+||+ C \mid \text{!}C \\
 B &\to \text{true} \mid \text{false} \mid \text{Operaciones logicas} \\
 \end{aligned}
