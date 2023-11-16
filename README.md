@@ -31,7 +31,7 @@ $$
 
 # Operaciones logicas
 
-```math
+$$
 \begin{aligned}
 L &\to TX \\
 X &\to \text{OTX} \mid \varepsilon \\
@@ -43,7 +43,7 @@ O &\to || \\
 A &\to \text{\&amp;\&amp;} \\
 I &\to \text{id} \\
 \end{aligned}
-```
+$$
 
 
 
