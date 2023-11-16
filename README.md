@@ -51,10 +51,11 @@ I &\to \text{id} \\
 
 $$
 \begin{aligned}
-S &\to \text{if} (C) \lbrace S \rbrace \text{ E }  \\
+S &\to \text{if} (C) \lbrace S \rbrace \text{ E } \mid \text{ S' }  \\
 E &\to \text{else} \lbrace S \rbrace \mid \varepsilon \\
 C &\to B \mid C \verb|&&| C \mid C \verb+||+ C \mid \text{!}C \\
 B &\to \text{true} \mid \text{false} \mid \text{Operaciones logicas} \\
+S' &\to \text{Uso de variables} \mid \text{S} \mid \text{S'} \\
 \end{aligned}
 $$
 
