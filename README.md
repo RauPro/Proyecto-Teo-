@@ -47,7 +47,7 @@ I &\to \text{id} \\
 
 
 
-## Condicion if-else
+# Condicion if-else
 
 $$
 \begin{aligned}
@@ -60,7 +60,7 @@ S' &\to \text{Uso de variables} \mid \text{S} \mid \text{S'} \\
 $$
 
 
-## Palabras Reservadas
+# Palabras Reservadas
 
 $$
 \begin{aligned}
@@ -68,7 +68,7 @@ R &\to \text{char} \mid \text{int} \mid \text{float} \mid \text{return} \mid \te
 \end{aligned}
 $$
 
-## Comentarios (Pendiente Maria Jose)
+# Comentarios (Pendiente Maria Jose)
 
 $$
 \begin{aligned}
