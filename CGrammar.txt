@@ -1,0 +1,49 @@
+# Structs
+TypeDec -> struct ID { VarDec } ;
+
+# Variable Declarations
+VarDec -> Type ID ; | VarDec
+
+# Type
+Type -> int | float | char
+
+# Functions
+FunctionDec -> Type ID ( FormalList ) { VarDec Statement return Exp ; }
+
+Statement -> ID = Exp ; // Assignment
+          | ID . ID = Exp ; // Struct assignment
+          | if ( Exp ) Statement else Statement // If
+          | while ( Exp ) Statement // While
+          | cout << Exp ; // Print
+          | cout << Exp << endl ; // Print
+          | { Statement } | Statement
+
+# Expressions
+Exp -> INT
+    | FLOAT
+    | CHAR
+    | ID
+    | ( Exp )
+    | - Exp           // Unary minus
+    | Exp Op Exp        // Binary operations
+    | Exp . ID        // Accessing a member of a struct
+    | ID ( ExpList ) // Function call
+    | ! Exp           // Logical NOT
+    | sizeof ( Exp )
+
+Op -> "+"   // Addition
+   | "-"    // Subtraction
+   | "*"    // Multiplication
+   | "/"    // Division
+   | "%"    // Modulus
+   | "=="   // Equality
+   | "!="   // Inequality
+   | "<"    // Less than
+   | ">"    // Greater than
+   | "<="   // Less than or equal to
+   | ">="   // Greater than or equal to
+   | "&&"   // Logical AND
+   | "||"   // Logical OR
+
+ExpList -> Exp ExpRest | ε
+ExpRest -> , Exp | ExpRest
