@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\begin{document}
+
+\section*{Syntax Specification}
+
+\subsection*{Structs}
+\begin{align*}
+\text{TypeDec} &\rightarrow \text{\textbf{struct}} \ \text{ID} \ \{ \text{VarDec} \} ;
+\end{align*}
+
+\subsection*{Variable Declarations}
+\begin{align*}
+\text{VarDec} &\rightarrow \text{Type} \ \text{ID} ; \ | \ \text{VarDec}
+\end{align*}
+
+\subsection*{Type}
+\begin{align*}
+\text{Type} &\rightarrow \text{\textbf{int}} \ | \ \text{\textbf{float}} \ | \ \text{\textbf{char}}
+\end{align*}
+
+\subsection*{Functions}
+\begin{align*}
+\text{FunctionDec} &\rightarrow \text{Type} \ \text{ID} ( \text{FormalList} ) \ \{ \text{VarDec} \ \text{Statement} \ \text{\textbf{return}} \ \text{Exp} ; \}
+\end{align*}
+
+\subsection*{Statement}
+\begin{align*}
+\text{Statement} &\rightarrow \text{ID} = \text{Exp} ; \\
+&| \ \text{ID} . \text{ID} = \text{Exp} ; \\
+&| \ \text{\textbf{if}} ( \text{Exp} ) \text{Statement} \ \text{\textbf{else}} \ \text{Statement} \\
+&| \ \text{\textbf{while}} ( \text{Exp} ) \text{Statement} \\
+&| \ \text{\textbf{cout}} << \text{Exp} ; \\
+&| \ \text{\textbf{cout}} << \text{Exp} << \text{\textbf{endl}} ; \\
+&| \ \{ \text{Statement} \} \\
+&| \ \text{Statement}
+\end{align*}
+
+\subsection*{Expressions}
+\begin{align*}
+\text{Exp} &\rightarrow \text{INT} \\
+&| \ \text{FLOAT} \\
+&| \ \text{CHAR} \\
+&| \ \text{ID} \\
+&| \ ( \text{Exp} ) \\
+&| \ - \text{Exp} \\
+&| \ \text{Exp} \ \text{Op} \ \text{Exp} \\
+&| \ \text{Exp} . \text{ID} \\
+&| \ \text{ID} ( \text{ExpList} ) \\
+&| \ ! \text{Exp} \\
+&| \ \text{\textbf{sizeof}} ( \text{Exp} )
+\end{align*}
+
+\subsection*{Operations}
+\begin{align*}
+\text{Op} &\rightarrow + \\
+&| \ - \\
+&| \ * \\
+&| \ / \\
+&| \ \% \\
+&| \ == \\
+&| \ != \\
+&| \ < \\
+&| \ > \\
+&| \ <= \\
+&| \ >= \\
+&| \ \&\& \\
+&| \ ||
+\end{align*}
+
+\subsection*{Expression List}
+\begin{align*}
+\text{ExpList} &\rightarrow \text{Exp} \ \text{ExpRest} \ | \ \varepsilon \\
+\text{ExpRest} &\rightarrow , \text{Exp} \ | \ \text{ExpRest}
+\end{align*}
+
+\end{document}
