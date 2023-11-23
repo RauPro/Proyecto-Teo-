@@ -2,7 +2,7 @@
 TypeDec -> struct ID { VarDec } ;
 
 # Variable Declarations
-VarDec -> Type ID ; | VarDec
+VarDec -> Type ID ; | Type ID = Exp | VarDec
 
 # Type
 Type -> int | float | char
@@ -31,19 +31,78 @@ Exp -> INT
     | ! Exp           // Logical NOT
     | sizeof ( Exp )
 
-Op -> "+"   // Addition
-   | "-"    // Subtraction
-   | "*"    // Multiplication
-   | "/"    // Division
-   | "%"    // Modulus
-   | "=="   // Equality
-   | "!="   // Inequality
-   | "<"    // Less than
-   | ">"    // Greater than
-   | "<="   // Less than or equal to
-   | ">="   // Greater than or equal to
-   | "&&"   // Logical AND
-   | "||"   // Logical OR
+Op -> +   // Addition
+   | -    // Subtraction
+   | *    // Multiplication
+   | /    // Division
+   | %    // Modulus
+   | ==   // Equality
+   | !=   // Inequality
+   | <    // Less than
+   | >    // Greater than
+   | <=   // Less than or equal to
+   | >=   // Greater than or equal to
+   | &&   // Logical AND
+   | ||   // Logical OR
 
 ExpList -> Exp ExpRest | ε
 ExpRest -> , Exp | ExpRest
+
+
+# Function Parameters
+FormalList -> Parameter FormalRest | ε
+FormalRest -> "," Parameter | FormalRest
+Parameter -> Type ID
+
+
+Formatted
+
+TypeDec -> struct ID { VarDec } ;
+VarDec -> Type ID ;
+VarDec -> Type ID = Exp
+VarDec -> VarDec
+Type -> int
+Type -> float
+Type -> char
+FunctionDec -> Type ID ( FormalList ) { VarDec Statement return Exp ; }
+Statement -> ID = Exp ;
+Statement -> ID . ID = Exp ;
+Statement -> if ( Exp ) Statement else Statement
+Statement -> while ( Exp ) Statement
+Statement -> cout << Exp ;
+Statement -> cout << Exp << endl ;
+Statement -> { Statement }
+Statement -> Statement
+Exp -> INT
+Exp -> FLOAT
+Exp -> CHAR
+Exp -> ID
+Exp -> ( Exp )
+Exp -> - Exp
+Exp -> Exp Op Exp
+Exp -> Exp . ID
+Exp -> ID ( ExpList )
+Exp -> ! Exp
+Exp -> sizeof ( Exp )
+Op -> +
+Op -> -
+Op -> *
+Op -> /
+Op -> %
+Op -> ==
+Op -> !=
+Op -> <
+Op -> >
+Op -> <=
+Op -> >=
+Op -> &&
+Op -> ||
+ExpList -> Exp ExpRest
+ExpList -> ε
+ExpRest -> , Exp
+ExpRest -> ExpRest
+FormalList -> Parameter FormalRest
+FormalList -> ε
+FormalRest -> "," Parameter
+FormalRest -> FormalRest
+Parameter -> Type ID
