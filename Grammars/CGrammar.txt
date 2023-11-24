@@ -10,69 +10,39 @@ Type -> int | float | char
 # Functions
 FunctionDec -> Type ID ( FormalList ) { VarDec Statement return Exp ; }
 
-Statement -> ID = Exp ; // Assignment
-          | ID . ID = Exp ; // Struct assignment
-          | if ( Exp ) Statement else Statement // If
-          | while ( Exp ) Statement // While
-          | cout << Exp ; // Print
-          | cout << Exp << endl ; // Print
-          | { Statement } | Statement
+# Statements
+Statement -> id StatementRest
+StatementRest -> = Exp ;
+StatementRest -> . id = Exp ;
+Statement -> IfStatement
+Statement -> WhileStatement
+Statement -> CoutStatement
+Statement -> BlockStatement
+Statement -> TypeDec
+Statement -> FunctionDec
 
-# Expressions
-Exp -> INT
-    | FLOAT
-    | CHAR
-    | ID
-    | ( Exp )
-    | - Exp           // Unary minus
-    | Exp Op Exp        // Binary operations
-    | Exp . ID        // Accessing a member of a struct
-    | ID ( ExpList ) // Function call
-    | ! Exp           // Logical NOT
-    | sizeof ( Exp )
-
-Op -> +   // Addition
-   | -    // Subtraction
-   | *    // Multiplication
-   | /    // Division
-   | %    // Modulus
-   | ==   // Equality
-   | !=   // Inequality
-   | <    // Less than
-   | >    // Greater than
-   | <=   // Less than or equal to
-   | >=   // Greater than or equal to
-   | &&   // Logical AND
-   | ||   // Logical OR
-
-ExpList -> Exp ExpRest | ε
-ExpRest -> , Exp | ExpRest
-
-
-# Function Parameters
-FormalList -> Parameter FormalRest | ε
-FormalRest -> "," Parameter | FormalRest
-Parameter -> Type ID
-
-
-Formatted
-
-TypeDec -> struct ID { VarDec } ;
-VarDec -> Type ID ;
-VarDec -> Type ID = Exp
-VarDec -> VarDec
+IfStatement -> if ( Exp ) Statement IfStatementRest
+IfStatementRest -> else Statement
+IfStatementRest -> ''
+WhileStatement -> while ( Exp ) Statement
+CoutStatement -> cout << Exp CoutRest ;
+CoutRest -> << endl
+CoutRest -> ''
+BlockStatement -> { StatementList }
+StatementList -> Statement StatementList
+StatementList -> ''
+TypeDec -> struct id { VarDecList } ;
+VarDec -> Type id VarDecRest ;
+VarDecRest -> = Exp
+VarDecRest -> ''
+VarDecList -> VarDec VarDecList
+VarDecList -> ''
 Type -> int
 Type -> float
 Type -> char
-FunctionDec -> Type ID ( FormalList ) { VarDec Statement return Exp ; }
-Statement -> ID = Exp ;
-Statement -> ID . ID = Exp ;
-Statement -> if ( Exp ) Statement else Statement
-Statement -> while ( Exp ) Statement
-Statement -> cout << Exp ;
-Statement -> cout << Exp << endl ;
-Statement -> { Statement }
-Statement -> Statement
+FunctionDec -> Type id ( FormalList ) { VarDecList StatementList return Exp ; }
+
+# Expressions
 Expression -> LogicalOrExpression
 LogicalOrExpression -> LogicalAndExpression MoreLogicalOr
 MoreLogicalOr -> || LogicalAndExpression MoreLogicalOr
@@ -104,14 +74,94 @@ MultiplicativeOperator -> *
 MultiplicativeOperator -> /
 Factor -> ( Expression )
 Factor -> id
-ExpList -> Exp ExpRest
+ExpList -> Expression ExpRest
 ExpList -> ε
-ExpRest -> , Exp
-ExpRest -> ExpRest
+ExpRest -> , Expression ExpRest
+ExpRest -> ε
 FormalList -> Parameter FormalRest
 FormalList -> ε
-FormalRest -> "," Parameter
-FormalRest -> FormalRest
+FormalRest -> , Parameter FormalRest
+FormalRest -> ε
+Parameter -> Type ID
+
+# Function Parameters
+FormalList -> Parameter FormalRest | ε
+FormalRest -> "," Parameter | FormalRest
+Parameter -> Type ID
+
+
+
+
+Formatted
+
+Statement -> id StatementRest
+StatementRest -> = Expression ;
+StatementRest -> . id = Expression ;
+Statement -> IfStatement
+Statement -> WhileStatement
+Statement -> CoutStatement
+Statement -> BlockStatement
+Statement -> TypeDec
+Statement -> FunctionDec
+IfStatement -> if ( Expression ) Statement IfStatementRest
+IfStatementRest -> else Statement
+IfStatementRest -> ''
+WhileStatement -> while ( Expression ) Statement
+CoutStatement -> cout << Expression CoutRest ;
+CoutRest -> << endl
+CoutRest -> ''
+BlockStatement -> { StatementList }
+StatementList -> Statement StatementList
+StatementList -> ''
+TypeDec -> struct id { VarDecList } ;
+VarDec -> Type id VarDecRest ;
+VarDecRest -> = Expression
+VarDecRest -> ''
+VarDecList -> VarDec VarDecList
+VarDecList -> ''
+Type -> int
+Type -> float
+Type -> char
+FunctionDec -> Type id ( FormalList ) { VarDecList StatementList return Expression ; }
+Expression -> LogicalOrExpression
+LogicalOrExpression -> LogicalAndExpression MoreLogicalOr
+MoreLogicalOr -> || LogicalAndExpression MoreLogicalOr
+MoreLogicalOr -> ''
+LogicalAndExpression -> EqualityExpression MoreLogicalAnd
+MoreLogicalAnd -> && EqualityExpression MoreLogicalAnd
+MoreLogicalAnd -> ''
+EqualityExpression -> RelationalExpression MoreEquality
+MoreEquality -> EqualityOperator RelationalExpression MoreEquality
+MoreEquality -> ''
+EqualityOperator -> ==
+EqualityOperator -> !=
+RelationalExpression -> AdditiveExpression MoreRelational
+MoreRelational -> RelationalOperator AdditiveExpression MoreRelational
+MoreRelational -> ''
+RelationalOperator -> <
+RelationalOperator -> >
+RelationalOperator -> <=
+RelationalOperator -> >=
+AdditiveExpression -> Term MoreAdditive
+MoreAdditive -> AdditiveOperator Term MoreAdditive
+MoreAdditive -> ''
+AdditiveOperator -> +
+AdditiveOperator -> -
+Term -> Factor MoreMultiplicative
+MoreMultiplicative -> MultiplicativeOperator Factor MoreMultiplicative
+MoreMultiplicative -> ''
+MultiplicativeOperator -> *
+MultiplicativeOperator -> /
+Factor -> ( Expression )
+Factor -> id
+ExpList -> Expression ExpRest
+ExpList -> ''
+ExpRest -> , Expression ExpRest
+ExpRest -> ''
+FormalList -> Parameter FormalRest
+FormalList -> ''
+FormalRest -> , Parameter FormalRest
+FormalRest -> ''
 Parameter -> Type ID
 
 
