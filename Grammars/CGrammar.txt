@@ -73,30 +73,37 @@ Statement -> cout << Exp ;
 Statement -> cout << Exp << endl ;
 Statement -> { Statement }
 Statement -> Statement
-Exp -> INT
-Exp -> FLOAT
-Exp -> CHAR
-Exp -> ID
-Exp -> ( Exp )
-Exp -> - Exp
-Exp -> Exp Op Exp
-Exp -> Exp . ID
-Exp -> ID ( ExpList )
-Exp -> ! Exp
-Exp -> sizeof ( Exp )
-Op -> +
-Op -> -
-Op -> *
-Op -> /
-Op -> %
-Op -> ==
-Op -> !=
-Op -> <
-Op -> >
-Op -> <=
-Op -> >=
-Op -> &&
-Op -> ||
+Expression -> LogicalOrExpression
+LogicalOrExpression -> LogicalAndExpression MoreLogicalOr
+MoreLogicalOr -> || LogicalAndExpression MoreLogicalOr
+MoreLogicalOr -> ''
+LogicalAndExpression -> EqualityExpression MoreLogicalAnd
+MoreLogicalAnd -> && EqualityExpression MoreLogicalAnd
+MoreLogicalAnd -> ''
+EqualityExpression -> RelationalExpression MoreEquality
+MoreEquality -> EqualityOperator RelationalExpression MoreEquality
+MoreEquality -> ''
+EqualityOperator -> ==
+EqualityOperator -> !=
+RelationalExpression -> AdditiveExpression MoreRelational
+MoreRelational -> RelationalOperator AdditiveExpression MoreRelational
+MoreRelational -> ''
+RelationalOperator -> <
+RelationalOperator -> >
+RelationalOperator -> <=
+RelationalOperator -> >=
+AdditiveExpression -> Term MoreAdditive
+MoreAdditive -> AdditiveOperator Term MoreAdditive
+MoreAdditive -> ''
+AdditiveOperator -> +
+AdditiveOperator -> -
+Term -> Factor MoreMultiplicative
+MoreMultiplicative -> MultiplicativeOperator Factor MoreMultiplicative
+MoreMultiplicative -> ''
+MultiplicativeOperator -> *
+MultiplicativeOperator -> /
+Factor -> ( Expression )
+Factor -> id
 ExpList -> Exp ExpRest
 ExpList -> ε
 ExpRest -> , Exp
@@ -106,3 +113,7 @@ FormalList -> ε
 FormalRest -> "," Parameter
 FormalRest -> FormalRest
 Parameter -> Type ID
+
+
+
+
