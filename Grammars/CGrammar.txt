@@ -11,9 +11,9 @@ Type -> int | float | char
 FunctionDec -> Type ID ( FormalList ) { VarDec Statement return Exp ; }
 
 # Statements
-Statement -> id StatementRest
+Statement -> ID StatementRest
 StatementRest -> = Exp ;
-StatementRest -> . id = Exp ;
+StatementRest -> . ID = Exp ;
 Statement -> IfStatement
 Statement -> WhileStatement
 Statement -> CoutStatement
@@ -31,8 +31,8 @@ CoutRest -> ''
 BlockStatement -> { StatementList }
 StatementList -> Statement StatementList
 StatementList -> ''
-TypeDec -> struct id { VarDecList } ;
-VarDec -> Type id VarDecRest ;
+TypeDec -> struct ID { VarDecList } ;
+VarDec -> Type ID VarDecRest ;
 VarDecRest -> = Exp
 VarDecRest -> ''
 VarDecList -> VarDec VarDecList
@@ -40,7 +40,7 @@ VarDecList -> ''
 Type -> int
 Type -> float
 Type -> char
-FunctionDec -> Type id ( FormalList ) { VarDecList StatementList return Exp ; }
+FunctionDec -> Type ID ( FormalList ) { VarDecList StatementList return Exp ; }
 
 # Expressions
 Expression -> LogicalOrExpression
@@ -73,7 +73,7 @@ MoreMultiplicative -> ''
 MultiplicativeOperator -> *
 MultiplicativeOperator -> /
 Factor -> ( Expression )
-Factor -> id
+Factor -> ID
 ExpList -> Expression ExpRest
 ExpList -> ε
 ExpRest -> , Expression ExpRest
@@ -94,9 +94,16 @@ Parameter -> Type ID
 
 Formatted
 
-Statement -> id StatementRest
+Program -> PreprocessorList GlobalDeclarationList
+PreprocessorList -> PreprocessorDirective PreprocessorList
+PreprocessorList -> ''
+PreprocessorDirective -> PREPROCESSOR < ID >
+GlobalDeclarationList -> GlobalDeclaration GlobalDeclarationList
+GlobalDeclarationList -> ''
+GlobalDeclaration -> FunctionDec TypeDec VarDec
+Statement -> ID StatementRest
 StatementRest -> = Expression ;
-StatementRest -> . id = Expression ;
+StatementRest -> . ID = Expression ;
 Statement -> IfStatement
 Statement -> WhileStatement
 Statement -> CoutStatement
@@ -113,8 +120,8 @@ CoutRest -> ''
 BlockStatement -> { StatementList }
 StatementList -> Statement StatementList
 StatementList -> ''
-TypeDec -> struct id { VarDecList } ;
-VarDec -> Type id VarDecRest ;
+TypeDec -> struct ID { VarDecList } ;
+VarDec -> Type ID VarDecRest ;
 VarDecRest -> = Expression
 VarDecRest -> ''
 VarDecList -> VarDec VarDecList
@@ -122,7 +129,7 @@ VarDecList -> ''
 Type -> int
 Type -> float
 Type -> char
-FunctionDec -> Type id ( FormalList ) { VarDecList StatementList return Expression ; }
+FunctionDec -> Type ID ( FormalList ) { VarDecList StatementList return Expression ; }
 Expression -> LogicalOrExpression
 LogicalOrExpression -> LogicalAndExpression MoreLogicalOr
 MoreLogicalOr -> || LogicalAndExpression MoreLogicalOr
@@ -153,7 +160,7 @@ MoreMultiplicative -> ''
 MultiplicativeOperator -> *
 MultiplicativeOperator -> /
 Factor -> ( Expression )
-Factor -> id
+Factor -> ID
 ExpList -> Expression ExpRest
 ExpList -> ''
 ExpRest -> , Expression ExpRest
