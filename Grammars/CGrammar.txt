@@ -1,99 +1,3 @@
-# Structs
-TypeDec -> struct ID { VarDec } ;
-
-# Variable Declarations
-VarDec -> Type ID ; | Type ID = Exp | VarDec
-
-# Type
-Type -> int | float | char
-
-# Functions
-FunctionDec -> Type ID ( FormalList ) { VarDec Statement return Exp ; }
-
-# Statements
-Statement -> ID StatementRest
-StatementRest -> = Exp ;
-StatementRest -> . ID = Exp ;
-Statement -> IfStatement
-Statement -> WhileStatement
-Statement -> CoutStatement
-Statement -> BlockStatement
-Statement -> TypeDec
-Statement -> FunctionDec
-
-IfStatement -> if ( Exp ) Statement IfStatementRest
-IfStatementRest -> else Statement
-IfStatementRest -> ''
-WhileStatement -> while ( Exp ) Statement
-CoutStatement -> cout << Exp CoutRest ;
-CoutRest -> << endl
-CoutRest -> ''
-BlockStatement -> { StatementList }
-StatementList -> Statement StatementList
-StatementList -> ''
-TypeDec -> struct ID { VarDecList } ;
-VarDec -> Type ID VarDecRest ;
-VarDecRest -> = Exp
-VarDecRest -> ''
-VarDecList -> VarDec VarDecList
-VarDecList -> ''
-Type -> int
-Type -> float
-Type -> char
-FunctionDec -> Type ID ( FormalList ) { VarDecList StatementList return Exp ; }
-
-# Expressions
-Expression -> LogicalOrExpression
-LogicalOrExpression -> LogicalAndExpression MoreLogicalOr
-MoreLogicalOr -> || LogicalAndExpression MoreLogicalOr
-MoreLogicalOr -> ''
-LogicalAndExpression -> EqualityExpression MoreLogicalAnd
-MoreLogicalAnd -> && EqualityExpression MoreLogicalAnd
-MoreLogicalAnd -> ''
-EqualityExpression -> RelationalExpression MoreEquality
-MoreEquality -> EqualityOperator RelationalExpression MoreEquality
-MoreEquality -> ''
-EqualityOperator -> ==
-EqualityOperator -> !=
-RelationalExpression -> AdditiveExpression MoreRelational
-MoreRelational -> RelationalOperator AdditiveExpression MoreRelational
-MoreRelational -> ''
-RelationalOperator -> <
-RelationalOperator -> >
-RelationalOperator -> <=
-RelationalOperator -> >=
-AdditiveExpression -> Term MoreAdditive
-MoreAdditive -> AdditiveOperator Term MoreAdditive
-MoreAdditive -> ''
-AdditiveOperator -> +
-AdditiveOperator -> -
-Term -> Factor MoreMultiplicative
-MoreMultiplicative -> MultiplicativeOperator Factor MoreMultiplicative
-MoreMultiplicative -> ''
-MultiplicativeOperator -> *
-MultiplicativeOperator -> /
-Factor -> ( Expression )
-Factor -> ID
-ExpList -> Expression ExpRest
-ExpList -> ε
-ExpRest -> , Expression ExpRest
-ExpRest -> ε
-FormalList -> Parameter FormalRest
-FormalList -> ε
-FormalRest -> , Parameter FormalRest
-FormalRest -> ε
-Parameter -> Type ID
-
-# Function Parameters
-FormalList -> Parameter FormalRest | ε
-FormalRest -> "," Parameter | FormalRest
-Parameter -> Type ID
-
-
-
-
-Formatted
-
 Program -> PreprocessorList GlobalDeclarationList
 PreprocessorList -> PreprocessorDirective PreprocessorList
 PreprocessorList -> ''
@@ -103,16 +7,15 @@ GlobalDeclarationList -> ''
 GlobalDeclaration -> FunctionDec TypeDec VarDec
 Statement -> ID StatementRest
 StatementRest -> = Expression ;
+StatementRest -> ID ;
 StatementRest -> . ID = Expression ;
 Statement -> IfStatement
 Statement -> WhileStatement
 Statement -> CoutStatement
 Statement -> BlockStatement
 Statement -> TypeDec
-Statement -> FunctionDec
 IfStatement -> if ( Expression ) Statement IfStatementRest
 IfStatementRest -> else Statement
-IfStatementRest -> ''
 WhileStatement -> while ( Expression ) Statement
 CoutStatement -> cout << Expression CoutRest ;
 CoutRest -> << endl
@@ -122,6 +25,7 @@ StatementList -> Statement StatementList
 StatementList -> ''
 TypeDec -> struct ID { VarDecList } ;
 VarDec -> Type ID VarDecRest ;
+VarDec -> '' ;
 VarDecRest -> = Expression
 VarDecRest -> ''
 VarDecList -> VarDec VarDecList
@@ -170,7 +74,3 @@ FormalList -> ''
 FormalRest -> , Parameter FormalRest
 FormalRest -> ''
 Parameter -> Type ID
-
-
-
-
