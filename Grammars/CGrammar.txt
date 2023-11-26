@@ -7,8 +7,8 @@ GlobalDeclarationList -> ''
 GlobalDeclaration -> FunctionDec TypeDec VarDec
 Statement -> ID StatementRest
 StatementRest -> = Expression ;
-StatementRest -> ID ;
 StatementRest -> . ID = Expression ;
+StatementRest -> ID ;
 Statement -> IfStatement
 Statement -> WhileStatement
 Statement -> CoutStatement
@@ -63,8 +63,10 @@ MoreMultiplicative -> MultiplicativeOperator Factor MoreMultiplicative
 MoreMultiplicative -> ''
 MultiplicativeOperator -> *
 MultiplicativeOperator -> /
-Factor -> ( Expression )
-Factor -> ID
+Factor -> ID FactorRest
+FactorRest -> . ID
+FactorRest -> ( ExpList )
+FactorRest -> ''
 ExpList -> Expression ExpRest
 ExpList -> ''
 ExpRest -> , Expression ExpRest
