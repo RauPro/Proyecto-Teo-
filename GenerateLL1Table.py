@@ -1,3 +1,4 @@
+from prettytable import PrettyTable
 def calculate_first(grammar):
     first = {key: set() for key in grammar.keys()}
 
@@ -127,20 +128,7 @@ def create_ll1_table(grammar, first, follow):
     return table
 
 
-def print_ll1_table(table):
-    terminals = sorted(list(table[next(iter(table))].keys()))
-    print(f"{'':<10}", end="")
-    for terminal in terminals:
-        print(f"{terminal:<10}", end="")
-    print()
 
-    for non_terminal, row in table.items():
-        print(f"{non_terminal:<10}", end="")
-        for terminal in terminals:
-            print(f"{row[terminal]:<10}", end="")
-        print()
-
-from prettytable import PrettyTable
 
 def print_pretty_ll1_table(table):
     # Collect the terminals for the columns, sorted for consistent ordering
@@ -169,47 +157,48 @@ if __name__ == '__main__':
     grammar = {
         "Program": ["PreprocessorList GlobalDeclarationList"],
         "PreprocessorList": ["PreprocessorDirective PreprocessorList", "ε"],
-        "PreprocessorDirective": ["PREPROCESSOR < ID >"],
+        "PreprocessorDirective": ["PREPROCESSOR LESS_THAN ID GREATER_THAN"],
         "GlobalDeclarationList": ["GlobalDeclaration GlobalDeclarationList", "ε"],
-        "GlobalDeclaration": ["FunctionDec", "TypeDec", "VarDec"],
-        "Statement": ["ID StatementRest", "IfStatement", "WhileStatement", "CoutStatement", "BlockStatement", "TypeDec",
-                      "FunctionDec"],
-        "StatementRest": ["= Expression ;", ". ID = Expression ;"],
-        "IfStatement": ["if ( Expression ) Statement IfStatementRest"],
+        "GlobalDeclaration": ["TypeDec", "VarDec", "FunctionDec"],
+        "Statement": ["ID StatementRest", "IfStatement", "WhileStatement", "CoutStatement", "BlockStatement",
+                      "TypeDec"],
+        "StatementRest": ["EQUALS Expression SEMICOLON", ". ID EQUALS Expression SEMICOLON", "ID SEMICOLON"],
+        "IfStatement": ["if PAREN_L Expression PAREN_R Statement IfStatementRest"],
         "IfStatementRest": ["else Statement", "ε"],
-        "WhileStatement": ["while ( Expression ) Statement"],
-        "CoutStatement": ["cout << Expression CoutRest ;"],
+        "WhileStatement": ["while PAREN_L Expression PAREN_R Statement"],
+        "CoutStatement": ["cout << Expression CoutRest SEMICOLON"],
         "CoutRest": ["<< endl", "ε"],
-        "BlockStatement": ["{ StatementList }"],
+        "BlockStatement": ["BRACE_L StatementList BRACE_R"],
         "StatementList": ["Statement StatementList", "ε"],
-        "TypeDec": ["struct ID { VarDecList } ;"],
-        "VarDec": ["Type ID VarDecRest ;"],
-        "VarDecRest": ["= Expression", "ε"],
+        "TypeDec": ["struct ID BRACE_L VarDecList BRACE_R SEMICOLON"],
+        "VarDec": ["Type ID VarDecRest SEMICOLON", "ε"],
+        "VarDecRest": ["EQUALS Expression", "ε"],
         "VarDecList": ["VarDec VarDecList", "ε"],
         "Type": ["int", "float", "char"],
-        "FunctionDec": ["Type ID ( FormalList ) { VarDecList StatementList return Expression ; }"],
+        "FunctionDec": ["Type ID PAREN_L FormalList PAREN_R BRACE_L VarDecList StatementList return Expression SEMICOLON BRACE_R"],
         "Expression": ["LogicalOrExpression"],
         "LogicalOrExpression": ["LogicalAndExpression MoreLogicalOr"],
-        "MoreLogicalOr": ["|| LogicalAndExpression MoreLogicalOr", "ε"],
+        "MoreLogicalOr": ["OR LogicalAndExpression MoreLogicalOr", "ε"],
         "LogicalAndExpression": ["EqualityExpression MoreLogicalAnd"],
-        "MoreLogicalAnd": ["&& EqualityExpression MoreLogicalAnd", "ε"],
+        "MoreLogicalAnd": ["AND EqualityExpression MoreLogicalAnd", "ε"],
         "EqualityExpression": ["RelationalExpression MoreEquality"],
         "MoreEquality": ["EqualityOperator RelationalExpression MoreEquality", "ε"],
-        "EqualityOperator": ["==", "!="],
+        "EqualityOperator": ["EQUAL_EQUAL", "NOT_EQUAL"],
         "RelationalExpression": ["AdditiveExpression MoreRelational"],
         "MoreRelational": ["RelationalOperator AdditiveExpression MoreRelational", "ε"],
-        "RelationalOperator": ["<", ">", "<=", ">="],
+        "RelationalOperator": ["LESS_THAN", "GREATER_THAN", "LESS_THAN_EQUAL", "GREATER_THAN_EQUAL"],
         "AdditiveExpression": ["Term MoreAdditive"],
         "MoreAdditive": ["AdditiveOperator Term MoreAdditive", "ε"],
-        "AdditiveOperator": ["+", "-"],
+        "AdditiveOperator": ["PLUS", "MINUS"],
         "Term": ["Factor MoreMultiplicative"],
         "MoreMultiplicative": ["MultiplicativeOperator Factor MoreMultiplicative", "ε"],
-        "MultiplicativeOperator": ["*", "/"],
-        "Factor": ["( Expression )", "ID"],
+        "MultiplicativeOperator": ["PRODUCT", "DIVISION"],
+        "Factor": ["ID FactorRest"],
+        "FactorRest": [". ID", "PAREN_L ExpList PAREN_R", "ε"],
         "ExpList": ["Expression ExpRest", "ε"],
-        "ExpRest": [", Expression ExpRest", "ε"],
+        "ExpRest": ["COMMA Expression ExpRest", "ε"],
         "FormalList": ["Parameter FormalRest", "ε"],
-        "FormalRest": [", Parameter FormalRest", "ε"],
+        "FormalRest": ["COMMA Parameter FormalRest", "ε"],
         "Parameter": ["Type ID"]
     }
 
@@ -224,6 +213,7 @@ if __name__ == '__main__':
         print(non_terminal, follow_set)
 
     ll1_table = create_ll1_table(grammar, first, follow)
+    print(ll1_table)
     print("LL1 Table:")
     #print_ll1_table(ll1_table)
     print_pretty_ll1_table(ll1_table)

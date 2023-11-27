@@ -10,8 +10,6 @@ from SymbolTable import SymbolTable
 
 tokens = (
     'ID',
-    'NUMBER',
-    'STRING',
     'COMMENT',
     'PLUS',
     'MINUS',
@@ -24,7 +22,6 @@ tokens = (
     'SEMICOLON',
     'COMMA',
     'PREPROCESSOR',
-    'END_INSTRUCTION',
     'BLOCK_COMMENT',
     'EQUALS',
     'GREATER_THAN',
@@ -72,7 +69,6 @@ t_DIVISION = r'\/'
 t_BRACE_L = r'\{'
 t_BRACE_R = r'\}'
 t_PREPROCESSOR = r'\#\w+'
-t_END_INSTRUCTION = r'\;'
 
 
 symbol_table = SymbolTable()
@@ -133,29 +129,6 @@ def t_PAREN_L(t):
     r'\('
     global is_declaring
     is_declaring = False
-    return t
-
-
-def t_NUMBER(t):
-    r'\b\d+\b'
-    global is_declaring
-    global var_type
-    global var_name
-    if is_declaring and var_name:
-        t.value = int(t.value)
-        symbol_table.add_symbol(var_name, var_type, t.value, scope_tracking)
-        is_declaring = False
-    return t
-
-
-def t_STRING(t):
-    r'"[^"]*"'
-    global is_declaring
-    global var_type
-    global var_name
-    if is_declaring and var_name:
-        symbol_table.add_symbol(var_name, f"Variable: {var_type} with value {t.value}")
-        is_declaring = False
     return t
 
 
