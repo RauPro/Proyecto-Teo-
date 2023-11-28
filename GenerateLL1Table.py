@@ -21,8 +21,8 @@ class LL1Parser:
                         first[symbol].update(first_set - {"ε"})
                         if "ε" not in first_set:
                             break
-                    else:
-                        first[symbol].add("ε")
+                        else:
+                            first[symbol].add("ε")
 
             return first[symbol]
 
@@ -109,7 +109,7 @@ class LL1Parser:
         print(pretty_table)
 
     def get_ll1_table(self):
-        return self.table
+        return self.first, self.follow, self.table
 
 if __name__ == '__main__':
     """grammar = {

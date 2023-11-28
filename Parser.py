@@ -80,7 +80,7 @@ scope_tracking = 0
 
 
 def t_ID(t):
-    r'\b[A-Za-z_][A-Za-z0-9_]*\b'
+    r'\b[A-Za-z0-9_][A-Za-z0-9_]*\b'
     t.type = reserved.get(t.value, 'ID')
     global is_declaring
     global var_type
@@ -209,6 +209,7 @@ def miParser(tokens, ll1_table, start_symbol):
     list_tockens.append('$')
     stack = ['$' , start_symbol]
     while tokens:
+        print(tokens)
         current_token = tokens[0]
         stack_top = stack[-1]
 
@@ -248,5 +249,9 @@ if __name__ == "__main__":
     start_symbol = 'Program'
     parser = LL1Parser(grammar)
     parser.print_pretty_ll1_table()
-    table = parser.get_ll1_table()
-    miParser(list_tockens, table, start_symbol)
+    first, follow, table = parser.get_ll1_table()
+    print(first)
+    print(follow)
+    print(table)
+    ans = miParser(list_tockens, table, start_symbol)
+    #print(ans)

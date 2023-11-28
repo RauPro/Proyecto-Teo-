@@ -13,7 +13,6 @@ Statement -> IfStatement
 Statement -> WhileStatement
 Statement -> CoutStatement
 Statement -> BlockStatement
-Statement -> TypeDec
 IfStatement -> if ( Expression ) Statement IfStatementRest
 IfStatementRest -> else Statement
 WhileStatement -> while ( Expression ) Statement
