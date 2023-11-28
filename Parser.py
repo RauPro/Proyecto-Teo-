@@ -212,19 +212,19 @@ def miParser(tokens, ll1_table, start_symbol):
         current_token = tokens[0]
         stack_top = stack[-1]
 
-        if stack_top == current_token:  # Coincidencia entre el token y el símbolo de la pila
-            tokens.pop(0)  # Avanzar en la entrada
-            stack.pop()  # Sacar de la pila
+        if stack_top == current_token:
+            tokens.pop(0)
+            stack.pop()
         elif (stack_top in ll1_table) and (current_token in ll1_table[stack_top]):
             production = ll1_table[stack_top][current_token]
-            stack.pop()  # Sacar el no terminal de la pila
-            if production != 'ε':  # Si la producción no es epsilon
-                stack.extend(production.split()[::-1])  # Añadir la producción a la pila en orden inverso
+            stack.pop()
+            if production != 'ε':
+                stack.extend(production.split()[::-1])
         else:
-            # Manejo de errores: no hay producción válida o coincidencia
+            # Manejo de errores: Activar modo panic?
             raise SyntaxError(f"Error de sintaxis en el token '{current_token}'.")
 
-        # Chequear si la pila y la entrada están vacías
+        # Check if DONE
         if stack == ['$'] and tokens == ['$']:
             return True  # Análisis sintáctico exitoso
 
