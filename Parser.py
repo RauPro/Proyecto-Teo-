@@ -2,7 +2,7 @@
 # Lexer para C
 # ------------------------------------------------------------
 import ply.lex as lex
-from ParseTable import *
+from CGrammar import *
 
 # List of token names.   This is always required
 import ply.lex as lex
@@ -10,6 +10,7 @@ from SymbolTable import SymbolTable
 
 tokens = (
     'ID',
+    'DOT',
     'COMMENT',
     'PLUS',
     'MINUS',
@@ -125,6 +126,11 @@ def t_PAREN_R(t):
     return t
 
 
+def t_DOT(t):
+    r'\.'
+    return t
+
+
 def t_PAREN_L(t):
     r'\('
     global is_declaring
@@ -156,11 +162,7 @@ t_ignore = ' \t'
 
 lexer = lex.lex()
 
-table = parse_table
-
-
-stack = ['eof', 0]
-
+list_tockens = []
 
 def analyze(data):
     global is_declaring
@@ -190,7 +192,7 @@ def analyze(data):
         lexer.prev_token_type = tok.type
 
         print(f"| {tok.type:20} | {tok.value:15} | {tok.lineno:15} | {tok.lexpos:11} |")
-
+        list_tockens.append(tok.type)
 
         if tok.value == "{":
             scope_tracking += 1
@@ -203,64 +205,37 @@ def get_symbol_table():
 
 
 
-def miParser():
-    # f = open('fuente.c','r')
-    # lexer.input(f.read())
-    lexer.input('total_mujeres+total_hombres$')
+def miParser(tokens, ll1_table, start_symbol):
+    list_tockens.append('$')
+    stack = [start_symbol, '$']
+    while tokens:
+        current_token = tokens[0]
+        stack_top = stack[-1]
 
-    tok = lexer.token()
-    x = stack[-1]  # primer elemento de der a izq
-    while True:
-        print(tok.type)
-        print(x)
-        if x == tok.type and x == 'eof':
-            print("Cadena reconocida exitosamente")
-            return  # aceptar
+        if stack_top == current_token:  # Coincidencia entre el token y el símbolo de la pila
+            tokens.pop(0)  # Avanzar en la entrada
+            stack.pop()  # Sacar de la pila
+        elif (stack_top in ll1_table) and (current_token in ll1_table[stack_top]):
+            production = ll1_table[stack_top][current_token]
+            stack.pop()  # Sacar el no terminal de la pila
+            if production != 'ε':  # Si la producción no es epsilon
+                stack.extend(production.split()[::-1])  # Añadir la producción a la pila en orden inverso
         else:
-            if x == tok.type and x != 'eof':  # llegué a un camino de derivación completo
-                stack.pop()
-                x = stack[-1]
-                tok = lexer.token()
-            if x in tokens and x != tok.type:
-                print("Error: se esperaba ", tok.type)
-                print('en la posicion: ', tok.lexpos);
-                return 0;
-            if x not in tokens:  # es no terminal
-                celda = buscar_en_tabla(x, tok.type)
-                if celda is None:
-                    print("Error: NO se esperaba", tok.type)
-                    print('en la posicion: ', tok.lexpos);
-                    return 0;
-                else:
-                    stack.pop()
-                    agregar_pila(celda)
-                    x = stack[-1]
-        print(stack)
-        print()
+            # Manejo de errores: no hay producción válida o coincidencia
+            raise SyntaxError(f"Error de sintaxis en el token '{current_token}'.")
 
-        # if not tok:
-        # break
-        # print(tok)
-        # print(tok.type, tok.value, tok.lineno, tok.lexpos)
+        # Chequear si la pila y la entrada están vacías
+        if stack == ['$'] and tokens == ['$']:
+            return True  # Análisis sintáctico exitoso
 
-
-def buscar_en_tabla(no_terminal, terminal):
-    for i in range(len(table)):
-        if (table[i][0] == no_terminal and table[i][1] == terminal):
-            return table[i][2]  # retorno la celda
-
-
-def agregar_pila(produccion):
-    for elemento in reversed(produccion):
-        if elemento != 'vacia':  # la vacía no la inserta
-            stack.append(elemento)
-
+    return False  # Análisis sintáctico fallido
 
 
 
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-
+from CGrammar import *
+from GenerateLL1Table import *
 
 if __name__ == "__main__":
     Tk().withdraw()
@@ -268,4 +243,10 @@ if __name__ == "__main__":
     f = open(filename, 'r')
     code = f.read()
     analyze(code)
+    print(list_tockens)
     symbols = get_symbol_table()
+    start_symbol = 'Program'
+    parser = LL1Parser(grammar)
+    parser.print_pretty_ll1_table()
+    table = parser.get_ll1_table()
+    miParser(list_tockens, table, start_symbol)
