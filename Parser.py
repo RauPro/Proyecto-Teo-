@@ -207,7 +207,7 @@ def get_symbol_table():
 
 def miParser(tokens, ll1_table, start_symbol):
     list_tockens.append('$')
-    stack = [start_symbol, '$']
+    stack = ['$' , start_symbol]
     while tokens:
         current_token = tokens[0]
         stack_top = stack[-1]

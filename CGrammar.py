@@ -18,7 +18,7 @@ grammar = {
         "VarDec": ["Type ID VarDecRest SEMICOLON", "ε"],
         "VarDecRest": ["EQUALS Expression", "ε"],
         "VarDecList": ["VarDec VarDecList", "ε"],
-        "Type": ["int", "float", "char"],
+        "Type": ["INT", "FLOAT", "CHAR"],
         "FunctionDec": ["Type ID PAREN_L FormalList PAREN_R BRACE_L VarDecList StatementList return Expression SEMICOLON BRACE_R"],
         "Expression": ["LogicalOrExpression"],
         "LogicalOrExpression": ["LogicalAndExpression MoreLogicalOr"],
