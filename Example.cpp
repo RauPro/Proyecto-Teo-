@@ -11,7 +11,7 @@ int main() {
     // Declaración de variables (VarDec)
 
     int result;
-    int a = 5;
+    int a = 5 * 5;
     int b = 3;
 
     // Asignación y llamada a función (StatementRest)

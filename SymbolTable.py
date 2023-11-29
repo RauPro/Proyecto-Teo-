@@ -11,7 +11,9 @@ class SymbolTable:
                 'value': value,
                 'scope': scope,
             }
-
+    def add_value(self, symbol, value):
+        if symbol in self.table:
+            self.table[symbol]['value'] = value
     def print_table(self):
         print("+----------------------- Tabla de Simbolos --------------------------+")
         print("+----------------------+-------------+-----------------+-------------+")

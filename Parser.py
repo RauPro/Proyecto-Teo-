@@ -57,7 +57,6 @@ tokens += tuple(reserved.values())
 t_PLUS = r'\+'
 t_MINUS = r'\-'
 t_PRODUCT = r'\*'
-t_EQUALS = r'\='
 t_GREATER_THAN = r'\>'
 t_LESS_THAN = r'\<'
 t_GREATER_THAN_EQUAL = r'\>\='
@@ -75,6 +74,8 @@ is_declaring = False
 var_type = None
 var_name = None
 scope_tracking = 0
+is_assigning = False
+assigning_to = None
 
 
 def t_ID(t):
@@ -82,6 +83,8 @@ def t_ID(t):
     t.type = reserved.get(t.value, 'ID')
     global is_declaring
     global var_type
+    global is_assigning
+    global assigning_to
     global var_name
     global scope_tracking
     if t.type in ['INT', 'FLOAT', 'DOUBLE', 'CHAR']:
@@ -91,9 +94,21 @@ def t_ID(t):
         var_name = t.value
         symbol_table.add_symbol(var_name, var_type, scope=str(scope_tracking))
         is_declaring = False
+    if is_assigning:
+        symbol_table.add_value(assigning_to, value=t.value)
+        is_assigning = False
+        assigning_to = None
+
     return t
 
 
+
+def t_EQUALS(t):
+    r'\='
+    global is_assigning, assigning_to, var_name
+    is_assigning = True
+    assigning_to = var_name
+    return t
 
 def t_SEMICOLON(t):
     r';'
