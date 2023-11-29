@@ -67,8 +67,6 @@ t_NOT_EQUAL = r'\!\='
 t_AND = r'\&\&'
 t_OR = r'\|\|'
 t_DIVISION = r'\/'
-t_BRACE_L = r'\{'
-t_BRACE_R = r'\}'
 t_PREPROCESSOR = r'\#\w+'
 
 
@@ -85,44 +83,43 @@ def t_ID(t):
     global is_declaring
     global var_type
     global var_name
+    global scope_tracking
     if t.type in ['INT', 'FLOAT', 'DOUBLE', 'CHAR']:
         is_declaring = True
         var_type = t.type
     elif is_declaring and t.type == 'ID':
         var_name = t.value
+        symbol_table.add_symbol(var_name, var_type, scope=str(scope_tracking))
+        is_declaring = False
     return t
+
 
 
 def t_SEMICOLON(t):
     r';'
-    global is_declaring
-    global var_type
-    global var_name
-    if is_declaring and var_name:
-        symbol_table.add_symbol(var_name, var_type, "Sin asignación", scope_tracking)
-        is_declaring = False
+    return t
+
+
+def t_BRACE_L(t):
+    r'\{'
+    global scope_tracking
+    scope_tracking += 1
+    return t
+
+def t_BRACE_R(t):
+    r'\}'
+    global scope_tracking
+    scope_tracking -= 1
     return t
 
 
 def t_COMMA(t):
     r','
-    global is_declaring
-    global var_type
-    global var_name
-    if is_declaring and var_name:
-        symbol_table.add_symbol(var_name, var_type, "Sin asignación", scope_tracking)
-        is_declaring = False
     return t
 
 
 def t_PAREN_R(t):
     r'\)'
-    global is_declaring
-    global var_type
-    global var_name
-    if is_declaring and var_name:
-        symbol_table.add_symbol(var_name, var_type, "Sin asignación", scope_tracking)
-        is_declaring = False
     return t
 
 
@@ -194,10 +191,6 @@ def analyze(data):
         print(f"| {tok.type:20} | {tok.value:15} | {tok.lineno:15} | {tok.lexpos:11} |")
         list_tockens.append(tok.type)
 
-        if tok.value == "{":
-            scope_tracking += 1
-        elif tok.value == "}":
-            scope_tracking -= 1
     print("+----------------------+-----------------+-----------------+-------------+", "\n")
 
 def get_symbol_table():
