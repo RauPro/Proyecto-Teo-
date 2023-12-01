@@ -92,7 +92,7 @@ def t_ID(t):
         var_type = t.type
     elif is_declaring and t.type == 'ID':
         var_name = t.value
-        symbol_table.add_symbol(var_name, var_type, scope=str(scope_tracking))
+        symbol_table.add_symbol(var_name, var_type, scope=str(scope_tracking), line=str(t.lineno))
         is_declaring = False
     if is_assigning:
         symbol_table.add_value(assigning_to, value=t.value)
@@ -203,9 +203,32 @@ def analyze(data):
             count_iterations = 0
         lexer.prev_token_type = tok.type
         print(f"| {tok.type:20} | {tok.value:15} | {tok.lineno:15} | {tok.lexpos:11} |")
+
         list_tockens.append(tok.type)
         mapper_tokens.append(tok)
     print("+----------------------+-----------------+-----------------+-------------+", "\n")
+    tokens = [_ for _ in list_tockens]
+    for i, token in enumerate(tokens):
+        if token in ['INT', 'FLOAT', 'CHAR']:
+            is_declaring = True
+            var_type = token
+        if is_declaring:
+            next_token = tokens[i+1:]
+            for j, next_tok in enumerate(next_token):
+                if next_tok == 'ID':
+                    var_name = mapper_tokens[i+j+1].value
+                    symbol_table.add_symbol(var_name, var_type, scope=str(scope_tracking), line=mapper_tokens[i+j+1].lineno)
+                if next_tok == 'EQUALS':
+                    value = []
+                    for k, next_tok2 in enumerate(next_token[j+1:]):
+                        if next_tok2 == 'SEMICOLON':
+                            is_declaring = False
+                            break
+                        value.append(mapper_tokens[i+j+k+2].value)
+                    symbol_table.add_value(var_name, value=''.join(value))
+                    is_declaring = False
+                    break
+
 
 def get_symbol_table():
     return symbol_table.print_table()
