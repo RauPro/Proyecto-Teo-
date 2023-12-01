@@ -1,8 +1,12 @@
 #include <stdio.h>
 
-struct Point {
+struct Point { ***
     int x;
     int y;
+    ****
+    int a;
+    int;
+    int b;
 };
 
 int ID = ID ;
@@ -13,15 +17,12 @@ int main() {
     int result;
     int a = 5 * 5;
     int b = 3;
-
     // Asignación y llamada a función (StatementRest)
     point1.x = 10;
     point1.y = 20;
     result = add(a, b);
-
     // Bucle while (WhileStatement)
     while (result > 0) {
-        cout << ID << endl;
         result = result - 1;
     }
 

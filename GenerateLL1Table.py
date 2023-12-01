@@ -112,12 +112,13 @@ class LL1Parser:
         return self.first, self.follow, self.table
 
 if __name__ == '__main__':
-    """grammar = {
+    grammar = {
         "E": ["T E'"],
         "E'": ["+ T E'", "ε"],
         "T": ["F T'"],
         "T'": ["* F T'", "ε"],
         "F": ["( E )", "id"]
-    }"""
+    }
+    parser = LL1Parser(grammar)
 
 

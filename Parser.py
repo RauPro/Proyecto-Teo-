@@ -173,7 +173,7 @@ def t_error(t):
 t_ignore = ' \t'
 
 lexer = lex.lex()
-
+mapper_tokens = []
 list_tockens = []
 
 def analyze(data):
@@ -202,10 +202,9 @@ def analyze(data):
             is_declaring = False
             count_iterations = 0
         lexer.prev_token_type = tok.type
-
         print(f"| {tok.type:20} | {tok.value:15} | {tok.lineno:15} | {tok.lexpos:11} |")
         list_tockens.append(tok.type)
-
+        mapper_tokens.append(tok)
     print("+----------------------+-----------------+-----------------+-------------+", "\n")
 
 def get_symbol_table():
@@ -217,21 +216,36 @@ def miParser(tokens, ll1_table, start_symbol):
     list_tockens.append('$')
     stack = ['$' , start_symbol]
     while tokens:
-        print(tokens)
         current_token = tokens[0]
         stack_top = stack[-1]
 
         if stack_top == current_token:
             tokens.pop(0)
+            mapper_tokens.pop(0)
             stack.pop()
-        elif (stack_top in ll1_table) and (current_token in ll1_table[stack_top]):
+        elif (stack_top in ll1_table) and (current_token in ll1_table[stack_top]) and ll1_table[stack_top][current_token] != '':
             production = ll1_table[stack_top][current_token]
             stack.pop()
             if production != 'ε':
                 stack.extend(production.split()[::-1])
+                temporal_production = production.split()[::-1]
         else:
-            # Manejo de errores: Activar modo panic?
-            raise SyntaxError(f"Error de sintaxis en el token '{current_token}'.")
+            found_recovery_point = False
+            print(f"Error de sintaxis en el token {current_token} en la linea {mapper_tokens[0].lineno}")
+            while tokens:
+                if tokens[0] in ['SEMICOLON', 'BRACE_R']:
+                    found_recovery_point = True
+                    tokens.pop(0)
+                    mapper_tokens.pop(0)
+                    break
+                tokens.pop(0)
+                mapper_tokens.pop(0)
+            if found_recovery_point:
+                while stack[-1] not in ll1_table:
+                    stack.pop()
+            if not found_recovery_point:
+                raise SyntaxError("Error de sintaxis irrecuperable")
+            continue
 
         # Check if DONE
         if stack == ['$'] and tokens == ['$']:
