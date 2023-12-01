@@ -241,7 +241,7 @@ def miParser(tokens, ll1_table, start_symbol):
     while tokens:
         current_token = tokens[0]
         stack_top = stack[-1]
-
+        print(f"Stack: {stack} | Input: {tokens}")
         if stack_top == current_token:
             tokens.pop(0)
             mapper_tokens.pop(0)
@@ -254,7 +254,11 @@ def miParser(tokens, ll1_table, start_symbol):
                 temporal_production = production.split()[::-1]
         else:
             found_recovery_point = False
-            print(f"Error de sintaxis en el token {current_token} en la linea {mapper_tokens[0].lineno}")
+            if len(mapper_tokens) > 0:
+                print(f"Error de sintaxis en el token {current_token} en la linea {mapper_tokens[0].lineno}")
+            else:
+                print(f"Error de sintaxis en fin de archivo")
+                break
             while tokens:
                 if tokens[0] in ['SEMICOLON', 'BRACE_R']:
                     found_recovery_point = True
@@ -299,4 +303,4 @@ if __name__ == "__main__":
     print(follow)
     print(table)
     ans = miParser(list_tockens, table, start_symbol)
-    #print(ans)
+    print("Archivo leido correctamente" if ans else "Error de sintaxis")
