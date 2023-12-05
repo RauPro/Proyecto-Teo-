@@ -9,7 +9,7 @@ struct Point {
 };
 
 int main() {
-    int result = 15;
+    float result = 15.10;
     int a = 5;
     int b = 3;
 
